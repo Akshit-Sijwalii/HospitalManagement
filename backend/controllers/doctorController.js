@@ -133,7 +133,7 @@ export const getTopDoctors = async (req, res) => {
     const topDoctors = await doctorModel
       .find()
       .sort({ experience: -1 }) // Sort by experience in descending order
-      .limit(20); // Limit to top 20 doctors
+      .limit(8); // Limit to top 20 doctors
 
     res.status(200).json(topDoctors);
   } catch (error) {
