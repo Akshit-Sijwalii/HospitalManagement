@@ -1,6 +1,6 @@
 // adminController.js
 import validator from "validator";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from "cloudinary";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";

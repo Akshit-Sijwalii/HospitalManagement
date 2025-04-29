@@ -3,7 +3,7 @@ import appointmentModel from "../modules/appointmentModel.js"; // You need this 
 // import nurseModel from "../modules/nurseModel.js"; // You need this model
 import patientModel from "../modules/userModel.js"; // You need this model
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 // 🩺 View Scheduled Appointments
 const getDoctorAppointments = async (req, res) => {
@@ -110,7 +110,6 @@ export const getAllDoctors = async (req, res) => {
   }
 };
 
-
 // ---------------------GetDoctorsById----------------------
 export const getDoctorById = async (req, res) => {
   try {
@@ -173,6 +172,5 @@ export const getDoctorsBySpeciality = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch doctors by speciality" });
   }
 };
-
 
 export { getDoctorAppointments, doctorLogin };
