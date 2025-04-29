@@ -75,6 +75,16 @@ export const bookAppointments = async (req, res) => {
         .json({ success: false, error: "No Doctor Found." });
     }
 
+    const patient = await userModel.findById(patientId);
+
+    if (!patient) {
+      await session.abortTransaction();
+      session.endSession();
+      return res
+        .status(400)
+        .json({ success: false, error: "No Patient Found." });
+    }
+
     // Convert startTime and endTime to Date objects
     const start = new Date(startTime);
     const end = new Date(endTime);
