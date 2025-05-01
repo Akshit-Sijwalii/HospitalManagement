@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import appointmentModel from "../modules/appointmentModel.js";
 import doctorModel from "../modules/doctorModel.js";
 import userModel from "../modules/userModel.js";
+import { createAppointment } from "../services/create-appointment.js";
 
 export const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -56,114 +57,11 @@ export const login = async (req, res) => {
 export const bookAppointments = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
-
   try {
-    const { doctorId, patientId, bookingDate, startTime, endTime, reason } =
-      req.body;
-
-    //check if doctor is available at that time slot
-
-    const doctor = await doctorModel
-      .findById(doctorId)
-      .populate("available_slots");
-
-    if (!doctor) {
-      await session.abortTransaction();
-      session.endSession();
-      return res
-        .status(400)
-        .json({ success: false, error: "No Doctor Found." });
-    }
-
-    const patient = await userModel.findById(patientId);
-
-    if (!patient) {
-      await session.abortTransaction();
-      session.endSession();
-      return res
-        .status(400)
-        .json({ success: false, error: "No Patient Found." });
-    }
-
-    // Convert startTime and endTime to Date objects
-    const start = new Date(startTime);
-    const end = new Date(endTime);
-
-    const bookingDay = new Date(bookingDate).toLocaleString("en-us", {
-      weekday: "long",
-    });
-
-    // Check if the doctor has availability for the requested day
-    const doctorAvailableSlot = doctor.available_slots.find(
-      (slot) => slot.day === bookingDay
-    );
-
-    if (!doctorAvailableSlot) {
-      await session.abortTransaction();
-      session.endSession();
-      return res.status(400).json({
-        success: false,
-        error: `Doctor Not Available on ${bookingDay}. `,
-      });
-    }
-
-    // Check if the requested time falls within the doctor's available slot
-    const slotStartTime = new Date(doctorAvailableSlot.from);
-    const slotEndTime = new Date(doctorAvailableSlot.to);
-
-    if (start < slotStartTime || end > slotEndTime) {
-      await session.abortTransaction();
-      session.endSession();
-      return res.status(400).json({
-        success: false,
-        message: `Requested time is outside of the doctor's available hours.`,
-      });
-    }
-
-    // 1. Check for overlapping appointments for same doctor
-    const conflictingAppointment = await appointmentModel.findOne({
-      doctorId,
-      date: bookingDate,
-      $or: [
-        {
-          startTime: { $lt: end },
-          endTime: { $gt: start },
-        },
-      ],
-      status: { $ne: "Cancelled" }, // ignore cancelled appointments
-    });
-    if (conflictingAppointment) {
-      await session.abortTransaction();
-      session.endSession();
-      return res.status(409).json({
-        success: false,
-        message: "Time slot already booked by another patient.",
-      });
-    }
-
-    // 2. Create new appointment
-    const newAppointment = new appointmentModel({
-      doctorId,
-      patientId,
-      date: bookingDate,
-      startTime: start,
-      endTime: end,
-      reason,
-    });
-
-    await newAppointment.save({ session });
-
-    // 3. Optionally, add appointment ID to doctor's appointments array
-    await doctorModel.findByIdAndUpdate(
-      doctorId,
-      { $push: { appointments: newAppointment._id } },
-      { session }
-    );
-
+    const appointment = await createAppointment(req.body, session);
     await session.commitTransaction();
     session.endSession();
-
-    return res.status(201).json({ success: true, appointment: newAppointment });
+    return res.status(201).json({ success: true, appointment });
   } catch (e) {
     await session.abortTransaction();
     session.endSession();

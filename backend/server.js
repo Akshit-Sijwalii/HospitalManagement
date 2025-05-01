@@ -12,6 +12,7 @@ import testRouter from "./routes/testRoute.js";
 // import ambulanceRouter from "./routes/ambulanceRoutes.js";
 import doctorRouter from "./routes/doctorRoute.js";
 import { updateAppointmentStatus } from "./cron/updateAppointmentStatus.js";
+import paymentRouter from "./routes/paymentRoute.js";
 
 //---------------------------------------- App Config ----------------------------------------
 const app = express();
@@ -34,6 +35,7 @@ app.use("/api/tests", testRouter);
 // app.use('/api/prescriptions', prescriptionRouter);
 // app.use('/api/ambulances', ambulanceRouter);
 app.use("/api/doctor", doctorRouter);
+app.use("/api/payment", paymentRouter);
 
 //---------------------------------------- Server Start ----------------------------------------
 app.listen(port, () => {
