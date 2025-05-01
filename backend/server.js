@@ -6,6 +6,7 @@ import connectCloudinary from "./config/cloudinary.js";
 
 // Import Routers
 import adminRouter from "./routes/adminRoute.js";
+import Forgetrouter from "./routes/forgetPassRoute.js";
 import userRouter from "./routes/userRoute.js";
 import testRouter from "./routes/testRoute.js";
 // import prescriptionRouter from "./routes/prescriptionRoutes.js";
@@ -36,6 +37,7 @@ app.use("/api/tests", testRouter);
 // app.use('/api/ambulances', ambulanceRouter);
 app.use("/api/doctor", doctorRouter);
 app.use("/api/payment", paymentRouter);
+app.use("/api/changepassword", Forgetrouter);
 
 //---------------------------------------- Server Start ----------------------------------------
 app.listen(port, () => {
