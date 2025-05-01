@@ -3,8 +3,7 @@ import nodemailer from "nodemailer";
 import PasswordResetToken from "../modules/forgetPassModel.js";
 import User from "../modules/userModel.js";
 import Doctor from "../modules/doctorModel.js";
-import bcrypt from "bcrypt";
-
+import bcrypt from "bcryptjs";
 
 // Email transporter
 const transporter = nodemailer.createTransport({
@@ -47,7 +46,7 @@ export const forgotPassword = async (req, res) => {
       userType,
       token,
     });
-// Put reset link of front end here narendra
+    // Put reset link of front end here narendra
     const resetLink = `https://yourfrontend.com/reset-password?token=${token}&userType=${userType}`;
 
     await transporter.sendMail({
@@ -68,7 +67,6 @@ export const forgotPassword = async (req, res) => {
         </div>
       `,
     });
-    
 
     res.status(200).json({ message: "Password reset email sent." });
   } catch (error) {
@@ -77,16 +75,16 @@ export const forgotPassword = async (req, res) => {
   }
 };
 
-// Reset password function 
-
-
+// Reset password function
 
 export const resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
 
     if (!token || !newPassword) {
-      return res.status(400).json({ message: "Token and new password are required." });
+      return res
+        .status(400)
+        .json({ message: "Token and new password are required." });
     }
 
     const tokenEntry = await PasswordResetToken.findOne({ token });
