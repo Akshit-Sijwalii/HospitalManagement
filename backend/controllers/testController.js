@@ -16,8 +16,21 @@ export const bookTest = async (req, res) => {
       return res.status(404).json({ message: "Patient not found" });
     }
 
-    const formattedDate = new Date(date); // ensure it's ISO format
+    // Check if the patient already has a test of the same type (ignore date)
+    const existingTest = await Test.findOne({
+      patientId: patient._id,
+      testType,
+    });
 
+    if (existingTest) {
+      return res.status(409).json({
+        message: `Test of type '${testType}' already booked for this patient.`,
+      });
+    }
+
+    const formattedDate = new Date(date); // still saving the given date
+
+    // Create and save new test
     const test = new Test({
       patientId: patient._id,
       testType,
@@ -34,6 +47,7 @@ export const bookTest = async (req, res) => {
     res.status(500).json({ message: "Error booking test", error: error.message });
   }
 };
+
 
 
 // View all booked tests
