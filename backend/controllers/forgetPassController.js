@@ -49,18 +49,21 @@ export const forgotPassword = async (req, res) => {
     // Put reset link of front end here narendra
     const resetLink = `https://yourfrontend.com/reset-password?token=${token}&userType=${userType}`;
 
-    await transporter.sendMail({
+  await transporter.sendMail({
       from: '"Hospital Management System" <hmsproject001@gmail.com>',
       to: email,
       subject: "Reset Your Password - Hospital Management System",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <img src="https://res.cloudinary.com/djdxfbfne/image/upload/v1746118450/HMS_mak4ty.png" alt="HMS Logo" style="width: 140px;">
+          </div>
           <h2 style="color: #333;">Password Reset Request</h2>
           <p>Dear user,</p>
           <p>We received a request to reset your password for your Hospital Management System account.</p>
           <p>If you made this request, please click the button below to reset your password:</p>
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${resetLink}" style="background-color: #1976d2; color: #fff; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
+            <a href="${resetLink}" style="background-color: #28a745; color: #fff; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
           </div>
           <p>This link will expire in <strong>1 hour</strong>. If you did not request this, please ignore this email.</p>
           <p style="margin-top: 40px; font-size: 14px; color: #888;">— Hospital Management System Team</p>
