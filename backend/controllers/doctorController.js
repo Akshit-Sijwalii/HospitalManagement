@@ -102,7 +102,7 @@ export default doctorLogin;
 // ----------------all doctors----------------
 export const getAllDoctors = async (req, res) => {
   try {
-    const doctors = await doctorModel.find(); // Fetch all doctors
+    const doctors = await doctorModel.find().populate("available_slots"); // Fetch all doctors
 
     res.status(200).json({ success: true, data: doctors });
   } catch (error) {
