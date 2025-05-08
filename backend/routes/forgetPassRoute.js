@@ -6,5 +6,5 @@ import { forgotPassword, resetPassword  } from "../controllers/forgetPassControl
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 
-
+ 
 export default router;

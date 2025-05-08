@@ -103,10 +103,13 @@ export default doctorLogin;
 export const getAllDoctors = async (req, res) => {
   try {
     const doctors = await doctorModel.find(); // Fetch all doctors
-    res.status(200).json(doctors);
+
+    res.status(200).json({ success: true, data: doctors });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to fetch doctors" });
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch doctors" });
   }
 };
 
