@@ -107,6 +107,7 @@ export const getAllDoctors = async (req, res) => {
     res.status(200).json({ success: true, data: doctors });
   } catch (error) {
     console.error(error);
+
     res
       .status(500)
       .json({ success: false, message: "Failed to fetch doctors" });
