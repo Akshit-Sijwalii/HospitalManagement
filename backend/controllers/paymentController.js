@@ -90,7 +90,7 @@ export const verifyPayment = async (req, res) => {
 
     await session.commitTransaction();
     session.endSession();
-    return res.status(200).json({ status: "success", appointment });
+    return res.status(200).json({ status: "success", data: appointment });
   } catch (error) {
     await newPayment.save({ session });
     await session.abortTransaction();
