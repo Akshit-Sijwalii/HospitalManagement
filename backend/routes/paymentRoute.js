@@ -9,10 +9,7 @@ const paymentRouter = express.Router();
 
 paymentRouter.post(
   "/create-order",
-  (req, res, next) => {
-    console.log(req.body);
-    next();
-  },
+
   //   authUser,
   createPaymentOrder
 );
