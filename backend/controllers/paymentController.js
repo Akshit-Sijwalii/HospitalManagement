@@ -35,9 +35,11 @@ export const createPaymentOrder = async (req, res) => {
       });
     }
     const order = await razorpay.orders.create(options);
-    res.json(order);
+    res.status(200).json({ success: true, data: order });
   } catch (error) {
-    res.status(500).send("Error creating Razorpay order");
+    res
+      .status(500)
+      .send({ success: false, error: "Error creating Razorpay order" });
   }
 };
 
@@ -88,7 +90,7 @@ export const verifyPayment = async (req, res) => {
 
     await session.commitTransaction();
     session.endSession();
-    return res.json({ status: "success", appointment });
+    return res.status(200).json({ status: "success", appointment });
   } catch (error) {
     await newPayment.save({ session });
     await session.abortTransaction();
