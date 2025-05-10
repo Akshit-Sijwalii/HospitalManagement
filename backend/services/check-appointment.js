@@ -49,13 +49,43 @@ export const checkAvailiablityBeforePayment = async ({
     const slotStartTime = new Date(doctorAvailableSlot.from);
     const slotEndTime = new Date(doctorAvailableSlot.to);
 
-    if (start < slotStartTime || end > slotEndTime) {
+    const requestedStart = new Date(startTime);
+    const requestedEnd = new Date(endTime);
+
+    const slotStartParts = doctorAvailableSlot.from.split(":");
+    const slotEndParts = doctorAvailableSlot.to.split(":");
+
+    const slotStart = requestedStart.setHours(
+      slotStartParts[0],
+      slotStartParts[1],
+      0,
+      0
+    );
+    const slotEnd = requestedStart.setHours(
+      slotEndParts[0],
+      slotEndParts[1],
+      0,
+      0
+    );
+
+    const reqStart = requestedStart.getTime();
+    const reqEnd = requestedEnd.getTime();
+
+    if (reqStart < slotStart || reqEnd > slotEnd) {
       return {
         success: false,
         code: 400,
         message: `Requested time is outside of doctor's available hours`,
       };
     }
+
+    // if (start < slotStartTime || end > slotEndTime) {
+    //   return {
+    //     success: false,
+    //     code: 400,
+    //     message: `Requested time is outside of doctor's available hours`,
+    //   };
+    // }
 
     // 1. Check for overlapping appointments for same doctor
     const conflictingAppointment = await appointmentModel.findOne({
