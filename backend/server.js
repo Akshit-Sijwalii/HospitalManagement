@@ -23,7 +23,12 @@ connectCloudinary();
 updateAppointmentStatus();
 
 //---------------------------------------- Middleware ----------------------------------------
-app.use(cors());
+app.use(
+  cors({
+    origin: "*", // Or set to your frontend domain
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 app.use(express.json());
 
 //---------------------------------------- API Endpoints ----------------------------------------
