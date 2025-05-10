@@ -15,11 +15,11 @@ const slotSchema = mongoose.Schema({
     default: "Monday",
   },
   from: {
-    type: Date,
+    type: String,
     required: true,
   },
   to: {
-    type: Date,
+    type: String,
     required: true,
   },
 });
