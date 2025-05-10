@@ -24,10 +24,6 @@ export const checkAvailiablityBeforePayment = async ({
       return { success: false, code: 404, message: "Patient not found" };
     }
 
-    // Convert startTime and endTime to Date objects
-    const start = new Date(startTime);
-    const end = new Date(endTime);
-
     const bookingDay = new Date(bookingDate).toLocaleString("en-us", {
       weekday: "long",
     });
@@ -46,10 +42,10 @@ export const checkAvailiablityBeforePayment = async ({
     }
 
     // Check if the requested time falls within the doctor's available slot
-    const slotStartTime = new Date(doctorAvailableSlot.from);
-    const slotEndTime = new Date(doctorAvailableSlot.to);
+    const slotStartTime = doctorAvailableSlot.from;
+    const slotEndTime = doctorAvailableSlot.to;
 
-    if (start < slotStartTime || end > slotEndTime) {
+    if (startTime < slotStartTime || endTime > slotEndTime) {
       return {
         success: false,
         code: 400,
@@ -63,8 +59,8 @@ export const checkAvailiablityBeforePayment = async ({
       date: bookingDate,
       $or: [
         {
-          startTime: { $lt: end },
-          endTime: { $gt: start },
+          startTime: { $lt: endTime },
+          endTime: { $gt: startTime },
         },
       ],
       status: { $ne: "Cancelled" }, // ignore cancelled appointments
