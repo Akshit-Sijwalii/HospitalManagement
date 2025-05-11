@@ -44,8 +44,14 @@ export const checkAvailiablityBeforePayment = async ({
     // Check if the requested time falls within the doctor's available slot
     const slotStartTime = doctorAvailableSlot.from;
     const slotEndTime = doctorAvailableSlot.to;
+    const dummyDate = new Date().toISOString().split("T")[0]; // e.g., "2025-05-10"
 
-    if (startTime < slotStartTime || endTime > slotEndTime) {
+    const requestedStart = new Date(`${dummyDate}T${startTime}:00`);
+    const requestedEnd = new Date(`${dummyDate}T${endTime}:00`);
+    const slotStart = new Date(`${dummyDate}T${slotStartTime}:00`);
+    const slotEnd = new Date(`${dummyDate}T${slotEndTime}:00`);
+
+    if (requestedStart < slotStart || requestedEnd > slotEnd) {
       return {
         success: false,
         code: 400,
@@ -59,8 +65,8 @@ export const checkAvailiablityBeforePayment = async ({
       date: bookingDate,
       $or: [
         {
-          startTime: { $lt: endTime },
-          endTime: { $gt: startTime },
+          startTime: { $lt: new Date(`${bookingDate}T${endTime}:00.000Z`) },
+          endTime: { $gt: new Date(`${bookingDate}T${startTime}:00.000Z`) },
         },
       ],
       status: { $ne: "Cancelled" }, // ignore cancelled appointments

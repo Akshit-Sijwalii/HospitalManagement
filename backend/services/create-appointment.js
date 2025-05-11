@@ -8,8 +8,8 @@ export const createAppointment = async (
   session
 ) => {
   try {
-    const start = new Date(startTime);
-    const end = new Date(endTime);
+    const start = new Date(`${bookingDate}T${startTime}:00`);
+    const end = new Date(`${bookingDate}T${endTime}:00`);
     // 1. Create new appointment
     const newAppointment = new appointmentModel({
       doctorId,
