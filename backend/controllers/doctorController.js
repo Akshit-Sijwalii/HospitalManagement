@@ -99,20 +99,6 @@ export default doctorLogin;
 //   }
 // };
 
-// ----------------all doctors----------------
-export const getAllDoctors = async (req, res) => {
-  try {
-    const doctors = await doctorModel.find().populate("available_slots"); // Fetch all doctors
-
-    res.status(200).json({ success: true, data: doctors });
-  } catch (error) {
-    console.error(error);
-
-    res
-      .status(500)
-      .json({ success: false, message: "Failed to fetch doctors" });
-  }
-};
 
 // ---------------------GetDoctorsById----------------------
 export const getDoctorById = async (req, res) => {
