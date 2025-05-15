@@ -295,4 +295,4 @@ function getAgeFromDOB(dob) {
 }
 
 
-export { addDoctor, removeDoctor, loginAdmin, getAdminDashboard };
+export { addDoctor, removeDoctor, loginAdmin, getAdminDashboard, getAllAppointments };
