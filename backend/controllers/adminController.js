@@ -217,4 +217,82 @@ const getAdminDashboard = async (req, res) => {
   console.log(">> Dashboard route hit");
 };
 
+// ----------------all doctors----------------
+const getAllDoctors = async (req, res) => {
+  try {
+    const doctors = await doctorModel.find().populate("available_slots"); // Fetch all doctors
+
+    res.status(200).json({ success: true, data: doctors });
+  } catch (error) {
+    console.error(error);
+
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch doctors" });
+  }
+};
+
+
+// ==================================getallappointments=========================
+
+const getAllAppointments = async (req, res) => {
+  try {
+    const appointments = await Appointment.find()
+      .populate({
+        path: "patientId",
+        select: "name dob",
+      })
+      .populate({
+        path: "doctorId",
+        select: "name fees",
+      });
+
+    // Optional: Reshape data to include age and fees at top level (frontend-friendly)
+    const formattedAppointments = appointments.map((appointment) => {
+      const dob = appointment.patientId?.dob;
+      const age = dob ? getAgeFromDOB(dob) : null;
+
+      return {
+        _id: appointment._id,
+        patient: {
+          name: appointment.patientId?.name,
+          image: appointment.patientId?.image,
+          age: age,
+        },
+        doctor: {
+          name: appointment.doctorId?.name,
+          image: appointment.doctorId?.image,
+          specialization: appointment.doctorId?.specialization,
+          fees: appointment.doctorId?.fees,
+        },
+        date: appointment.date,
+        startTime: appointment.startTime,
+        endTime: appointment.endTime,
+        reason: appointment.reason,
+        status: appointment.status,
+        createdAt: appointment.createdAt,
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      appointments: formattedAppointments,
+    });
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching appointments",
+    });
+  }
+};
+
+// Helper function
+function getAgeFromDOB(dob) {
+  const birthDate = new Date(dob);
+  const diff = Date.now() - birthDate.getTime();
+  return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+}
+
+
 export { addDoctor, removeDoctor, loginAdmin, getAdminDashboard };
