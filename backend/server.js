@@ -9,8 +9,6 @@ import adminRouter from "./routes/adminRoute.js";
 import Forgetrouter from "./routes/forgetPassRoute.js";
 import userRouter from "./routes/userRoute.js";
 import testRouter from "./routes/testRoute.js";
-// import prescriptionRouter from "./routes/prescriptionRoutes.js";
-// import ambulanceRouter from "./routes/ambulanceRoutes.js";
 import doctorRouter from "./routes/doctorRoute.js";
 import { updateAppointmentStatus } from "./cron/updateAppointmentStatus.js";
 import paymentRouter from "./routes/paymentRoute.js";
@@ -32,14 +30,10 @@ app.use(
 app.use(express.json());
 
 //---------------------------------------- API Endpoints ----------------------------------------
-app.get("/", (req, res) => {
-  return res.json({ message: "narendra ne top kr diya!" });
-});
+
 app.use("/api/admin", adminRouter);
 app.use("/api/user", userRouter);
 app.use("/api/tests", testRouter);
-// app.use('/api/prescriptions', prescriptionRouter);
-// app.use('/api/ambulances', ambulanceRouter);
 app.use("/api/doctor", doctorRouter);
 app.use("/api/payment", paymentRouter);
 app.use("/api/changepassword", Forgetrouter);
