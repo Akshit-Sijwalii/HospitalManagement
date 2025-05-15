@@ -4,25 +4,21 @@ import {
   loginAdmin,
   removeDoctor,
   getAdminDashboard,
+  getAllDoctors,
+  getAllAppointments
 } from "../controllers/adminController.js";
 import upload from "../middlewares/multer.js";
 import authAdmin from "../middlewares/authAdmin.js";
 
 const adminRouter = express.Router();
 
-adminRouter.post(
-  "/add-doctor",
-  authAdmin,
+adminRouter.post("/login", loginAdmin); // ❗ Login is open
 
-  upload.single("image"),
-
-  addDoctor
-);
-adminRouter.post("/login", loginAdmin);
+// ❗ Protected Routes
+adminRouter.post("/add-doctor",authAdmin,upload.single("image"),addDoctor);
 adminRouter.delete("/remove-doctor/:doctorId", authAdmin, removeDoctor);
 adminRouter.get("/dashboard", authAdmin, getAdminDashboard);
-adminRouter.get("/prince", (req, res) => {
-  return res.json({ redirect: "redirect ho gye na" });
-});
+adminRouter.get("/all/doc", authAdmin, getAllDoctors); 
+adminRouter.get("/all-appointments",authAdmin,getAllAppointments)
 
 export default adminRouter;
